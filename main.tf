@@ -19,8 +19,8 @@ variable "elb_port" {
 resource "aws_security_group" "instance" {
   name = "terraform-example-instance"
   ingress {
-    from_port   = 8080
-    to_port     = 8080
+    from_port   = var.server_port
+    to_port     = var.server_port
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -28,6 +28,7 @@ resource "aws_security_group" "instance" {
 
 resource "aws_security_group" "elb" {
   name = "terraform-example-elb"
+
   # Allow all outbound
   egress {
     from_port   = 0
@@ -35,10 +36,11 @@ resource "aws_security_group" "elb" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
   # Inbound HTTP from anywhere
   ingress {
-    from_port   = 80
-    to_port     = 80
+    from_port   = var.elb_port
+    to_port     = var.elb_port
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
